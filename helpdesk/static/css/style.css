@@ -14,6 +14,9 @@
   --good: #1e6b34;
   --warn: #8a5300;
   --bad: #a3231b;
+  --chart-bar: var(--brand);
+  --flash-bg: #e6f2ea;
+  --internal-bg: #fff8e6;
 }
 
 * { box-sizing: border-box; }
@@ -133,7 +136,7 @@ th { background: var(--panel); }
 .signout button { padding: 0.25rem 0.75rem; border-color: #fff; }
 
 /* Messages after an action, and form errors */
-.flash { background: #e6f2ea; border-left: 6px solid var(--good); padding: 0.75rem 1rem; margin: 1rem 0; }
+.flash { background: var(--flash-bg); border-left: 6px solid var(--good); padding: 0.75rem 1rem; margin: 1rem 0; }
 .error-summary { border: 4px solid var(--bad); padding: 0.5rem 1rem; margin: 1rem 0; }
 .error-summary p, .error-summary li { color: var(--bad); font-weight: bold; }
 .error-summary h2 { margin-top: 0.5rem; font-size: 1.15rem; }
@@ -174,7 +177,7 @@ th { background: var(--panel); }
 /* The timeline: a list with a line down the left side. */
 .timeline { list-style: none; padding: 0; border-left: 4px solid var(--line); margin-left: 0.5rem; }
 .timeline li { padding: 0.25rem 1rem 0.5rem; margin-bottom: 0.75rem; }
-.timeline li.internal { background: #fff8e6; }
+.timeline li.internal { background: var(--internal-bg); }
 .timeline p { margin: 0.25rem 0; }
 .timeline-meta { color: var(--muted); font-size: 0.9rem; }
 .tag { display: inline-block; font-size: 0.8rem; font-weight: bold; padding: 0 0.4rem; border: 1px solid var(--good); color: var(--good); border-radius: 3px; }
@@ -213,3 +216,53 @@ h3 { font-size: 1.1rem; margin: 1rem 0 0.5rem; }
 .kpis li { background: var(--panel); border: 1px solid var(--line); border-top: 6px solid var(--brand); border-radius: 6px; padding: 0.75rem 1rem; }
 .kpi-number { display: block; font-size: 2rem; font-weight: bold; color: var(--brand-dark); }
 canvas { display: block; max-width: 100%; margin-top: 0.5rem; }
+
+/* Accessibility settings page */
+fieldset { border: 1px solid var(--line); border-radius: 6px; margin: 0 0 1rem; padding: 0.5rem 1rem 1rem; max-width: 34rem; }
+legend { font-weight: bold; padding: 0 0.25rem; }
+.radio label { display: inline; font-weight: normal; }
+.radio, .checkbox { margin: 0.5rem 0; }
+input[type="radio"], input[type="checkbox"] { width: 1.25rem; height: 1.25rem; vertical-align: middle; margin-right: 0.5rem; }
+.size-large { font-size: 1.2rem; }
+.size-larger { font-size: 1.4rem; }
+kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 0.3rem; background: var(--panel); font-family: inherit; }
+
+/* Larger text: everything is sized in rem, so changing the root size
+   makes the whole page bigger. */
+html.text-large { font-size: 118.75%; }
+html.text-larger { font-size: 137.5%; }
+
+/* High contrast: change the colour variables, and the whole page follows. */
+html.high-contrast {
+  --ink: #ffffff;
+  --muted: #ffffff;
+  --paper: #000000;
+  --panel: #000000;
+  --line: #ffffff;
+  --brand: #000000;
+  --brand-dark: #ffff00;
+  --link: #ffff00;
+  --focus: #00ffff;
+  --good: #7cfc00;
+  --warn: #ffd700;
+  --bad: #ff8080;
+  --chart-bar: #ffff00;
+  --flash-bg: #000000;
+  --internal-bg: #000000;
+}
+html.high-contrast .site-header { border-bottom: 3px solid #fff; }
+html.high-contrast button,
+html.high-contrast .button { border-color: #fff; color: #fff; }
+html.high-contrast .button.secondary,
+html.high-contrast button.secondary { color: #fff; }
+html.high-contrast .flash { border: 3px solid var(--good); }
+html.high-contrast .timeline li.internal { border: 2px dashed var(--warn); }
+html.high-contrast .panel-success { background: #000; border: 3px solid var(--good); }
+html.high-contrast .priority-critical { background: #000; color: var(--bad); }
+html.high-contrast .skip-link { background: var(--focus); }
+/* Places that use the brand colour for text or borders need a visible one. */
+html.high-contrast .status-open,
+html.high-contrast .job-title { color: #fff; }
+html.high-contrast .day.today { border-color: var(--focus); }
+html.high-contrast .job,
+html.high-contrast .kpis li { border-color: #fff; }

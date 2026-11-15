@@ -1,25 +1,30 @@
-# Netheret help desk, step 12: reports
+# Netheret help desk, step 13: accessibility
 
 A teaching example. Over sixteen steps we build a help desk web app for
 Netheret, a made-up company that supports the IT of small businesses. This
-step gives managers a reports page: KPIs worked out with SQL queries, and
-bar charts drawn with plain JavaScript.
+step adds per-user accessibility settings, larger text and high contrast,
+and friendlier error pages.
 
 ## What this step adds
 
-- `helpdesk/reports.py`: one small function per KPI:
-  - open requests by priority;
-  - average hours to resolve, by priority;
-  - requests per member of staff, in total and still open;
-  - first-contact resolution: the share of finished requests Tier 1 fixed
-    without escalating;
-  - open requests older than 2 working days;
-  - on-site jobs done this week, and the share of past jobs marked done;
-  - the most helpful knowledge base articles.
-- `helpdesk/templates/reports.html`: the key numbers, then a table for each
-  KPI.
-- `helpdesk/static/js/charts.js`: finds each `table.chart` and draws a bar
-  chart on a `<canvas>` above it, reading the numbers from the table.
+- `helpdesk/settings.py` and `templates/settings.html`: a Settings page where
+  each person chooses a text size (normal, large, larger) and high contrast.
+  The choices are saved in the `text_size` and `high_contrast` columns of
+  their `User` row, so they follow them to any computer.
+- `base.html` turns the settings into classes on `<html>`, for example
+  `class="text-larger high-contrast"`.
+- `style.css`:
+  - `html.text-large` and `html.text-larger` raise the root font size, and
+    because every size is in `rem` the whole page grows;
+  - `html.high-contrast` changes the colour variables to white and yellow on
+    black, and fixes the few places that needed more than that;
+  - the bar charts read their colour from `--chart-bar`, so they change too.
+- Messages after an action have `role="status"`, so screen readers read them.
+- Plain-words pages for "403 Forbidden" and "404 Not found", with a way back.
+
+Already there from earlier steps: the skip link, landmarks, a visible focus
+ring, a label for every field, error summaries linked to their fields, and
+tables with captions and headers.
 
 ## Run it
 
@@ -31,20 +36,16 @@ python seed.py
 flask --app helpdesk run --debug
 ```
 
-Sign in as `manager@netheret.example` (demo password `password123`) and
-open Reports. Resolve a request or mark a job done, then reload: the numbers
-change, because nothing is stored, everything is counted when the page opens.
+Sign in with any demo account (demo password `password123`), open Settings,
+choose "Larger" and high contrast, then visit Reports or Jobs. Try using the
+whole app with only the keyboard.
 
 ## What to look at
 
-- `func.count`, `func.avg` and `group_by`: the database does the counting,
-  rather than Python looping over every row.
-- `julianday()` is SQLite's own function: another database would need a
-  different way to subtract dates.
-- The chart is drawn from the table, so the two can never disagree. The
-  canvas has `aria-hidden="true"` because the table already says everything
-  for screen readers.
-- `devicePixelRatio`: the canvas is drawn at the screen's real resolution so
-  the text is not blurry.
+- How changing a few CSS variables recolours the whole site.
+- `fieldset` and `legend` around the radio buttons: a screen reader says
+  "Text size" before reading each choice.
+- Colour is never the only clue: badges carry words, cancelled jobs are
+  struck through and today's column says "(today)".
 
 <!-- links -->

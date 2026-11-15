@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Accessibility settings{% endblock %}
+{% block content %}
+  <h1>Accessibility settings</h1>
+  <p>Make the help desk easier to read. Your choices are saved with your account.</p>
+
+  <form method="post" action="{{ url_for('settings.accessibility') }}">
+    {# A fieldset and legend group the radio buttons under one question. #}
+    <fieldset>
+      <legend>Text size</legend>
+      {% for size in text_sizes %}
+      <div class="radio">
+        <input type="radio" id="text_size_{{ size }}" name="text_size" value="{{ size }}"{% if g.user.text_size == size %} checked{% endif %}>
+        <label for="text_size_{{ size }}" class="size-{{ size }}">{{ size|capitalize }}</label>
+      </div>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset>
+      <legend>Colours</legend>
+      <div class="checkbox">
+        <input type="checkbox" id="high_contrast" name="high_contrast" value="yes"{% if g.user.high_contrast %} checked{% endif %}>
+        <label for="high_contrast">High contrast: white and yellow on black</label>
+      </div>
+    </fieldset>
+
+    <button type="submit">Save settings</button>
+  </form>
+
+  <h2>Using the keyboard</h2>
+  <ul>
+    <li><kbd>Tab</kbd> moves to the next link, button or box, and <kbd>Shift</kbd> + <kbd>Tab</kbd> goes back.</li>
+    <li>The first <kbd>Tab</kbd> on any page shows a "Skip to main content" link.</li>
+    <li><kbd>Enter</kbd> follows a link or presses a button; <kbd>Space</kbd> ticks a box.</li>
+    <li>Arrow keys choose between radio buttons and options in a list.</li>
+  </ul>
+  <p>You can also zoom any page with <kbd>Ctrl</kbd> and <kbd>+</kbd> (<kbd>Cmd</kbd> and <kbd>+</kbd> on a Mac).</p>
+{% endblock %}

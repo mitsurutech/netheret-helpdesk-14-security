@@ -17,6 +17,23 @@ ROLE_NAMES = {
 }
 
 
+# Friendly pages for errors, in plain words, with a way back.
+@bp.app_errorhandler(403)
+def forbidden(error):
+    return render_template(
+        "errors/error.html", heading="You cannot open this page",
+        message="Your account does not have access to this page.",
+    ), 403
+
+
+@bp.app_errorhandler(404)
+def not_found(error):
+    return render_template(
+        "errors/error.html", heading="Page not found",
+        message="Check the address, or go back and follow a link.",
+    ), 404
+
+
 @bp.route("/")
 def home():
     if g.user:

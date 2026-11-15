@@ -4,7 +4,8 @@
   <li><a href="{{ url_for(endpoint) }}"{% if request.endpoint == endpoint %} aria-current="page"{% endif %}>{{ label }}</a></li>
 {% endmacro %}
 <!doctype html>
-<html lang="en-GB">
+{# The user's accessibility settings become CSS classes on <html>. #}
+<html lang="en-GB"{% if g.user %} class="text-{{ g.user.text_size }}{{ ' high-contrast' if g.user.high_contrast }}"{% endif %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,6 +40,7 @@
           {% if g.user.role == "manager" %}
           {{ nav_link('reports.index', 'Reports') }}
           {% endif %}
+          {{ nav_link('settings.accessibility', 'Settings') }}
           {% else %}
           {{ nav_link('main.home', 'Home') }}
           {{ nav_link('auth.signin', 'Sign in') }}
@@ -58,7 +60,7 @@
     {# Short messages from the last action, like "Signed in". #}
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-    <div class="flashes">
+    <div class="flashes" role="status">
       {% for message in messages %}
       <p class="flash">{{ message }}</p>
       {% endfor %}

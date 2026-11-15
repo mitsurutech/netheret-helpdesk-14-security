@@ -17,7 +17,7 @@ function drawChart(table) {
 
   // Read the colours from the CSS, so the chart matches the page.
   var style = getComputedStyle(document.documentElement);
-  var barColour = style.getPropertyValue("--brand").trim();
+  var barColour = style.getPropertyValue("--chart-bar").trim();
   var textColour = style.getPropertyValue("--ink").trim();
 
   var barHeight = 28;
