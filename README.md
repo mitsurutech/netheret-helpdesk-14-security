@@ -1,30 +1,42 @@
-# Netheret help desk, step 13: accessibility
+# Netheret help desk, step 14: security and law
 
 A teaching example. Over sixteen steps we build a help desk web app for
 Netheret, a made-up company that supports the IT of small businesses. This
-step adds per-user accessibility settings, larger text and high contrast,
-and friendlier error pages.
+step adds protection against cross-site request forgery (CSRF), safer
+cookies and security headers, and a privacy notice for UK GDPR.
 
 ## What this step adds
 
-- `helpdesk/settings.py` and `templates/settings.html`: a Settings page where
-  each person chooses a text size (normal, large, larger) and high contrast.
-  The choices are saved in the `text_size` and `high_contrast` columns of
-  their `User` row, so they follow them to any computer.
-- `base.html` turns the settings into classes on `<html>`, for example
-  `class="text-larger high-contrast"`.
-- `style.css`:
-  - `html.text-large` and `html.text-larger` raise the root font size, and
-    because every size is in `rem` the whole page grows;
-  - `html.high-contrast` changes the colour variables to white and yellow on
-    black, and fixes the few places that needed more than that;
-  - the bar charts read their colour from `--chart-bar`, so they change too.
-- Messages after an action have `role="status"`, so screen readers read them.
-- Plain-words pages for "403 Forbidden" and "404 Not found", with a way back.
+- `helpdesk/security.py`:
+  - a CSRF token written by hand: a random value kept in the session and
+    put in a hidden field in every POST form; `check_csrf` runs before every
+    request and answers "400 Bad Request" to a POST without the right token;
+  - security headers on every response: a Content Security Policy that only
+    allows our own scripts and styles, no framing, no type guessing.
+- The session cookie is `HttpOnly` and `SameSite=Lax`, and `Secure` when you
+  set `SESSION_COOKIE_SECURE=1` on a server with HTTPS.
+- `/privacy`: a privacy notice in plain words, linked from every page.
+- A plain-words page for "400 Bad Request".
 
-Already there from earlier steps: the skip link, landmarks, a visible focus
-ring, a label for every field, error summaries linked to their fields, and
-tables with captions and headers.
+## Security so far, in one list
+
+| Risk | What the app does | Where |
+|------|-------------------|-------|
+| Stolen passwords | Only salted hashes are stored | `models.py` (`set_password`) |
+| Guessing who has an account | One message for any failed sign in | `auth.py` |
+| Session fixation | `session.clear()` when signing in | `auth.py` |
+| Tampered session cookie | Signed with a secret key from the environment | `__init__.py` |
+| Seeing other companies' data | Every customer query is limited to their company | `customer.py`, `tickets.py` |
+| Doing things your role should not | `@role_required` and checks in each action | `auth.py`, `jobs.py`, `tickets.py` |
+| Cross-site scripting (XSS) | Jinja escapes everything; no `|safe`; CSP | templates, `security.py` |
+| SQL injection | SQLAlchemy queries with parameters, never string building | everywhere |
+| Cross-site request forgery | Hand-written CSRF token on every POST form | `security.py` |
+| Clickjacking | `X-Frame-Options` and `frame-ancestors` | `security.py` |
+
+The law this touches: UK GDPR and the Data Protection Act 2018 (personal data,
+the privacy notice, keeping only what is needed), the Computer Misuse Act 1990
+(why access control matters) and the Equality Act 2010 (why accessibility is
+not optional).
 
 ## Run it
 
@@ -36,16 +48,17 @@ python seed.py
 flask --app helpdesk run --debug
 ```
 
-Sign in with any demo account (demo password `password123`), open Settings,
-choose "Larger" and high contrast, then visit Reports or Jobs. Try using the
-whole app with only the keyboard.
+Sign in with any demo account (demo password `password123`). View the page
+source of any form to see the hidden `csrf_token` field. To see the check
+work, open your browser's developer tools, delete the hidden field from a form
+and submit it: you get the "That did not work" page.
 
 ## What to look at
 
-- How changing a few CSS variables recolours the whole site.
-- `fieldset` and `legend` around the radio buttons: a screen reader says
-  "Text size" before reading each choice.
-- Colour is never the only clue: badges carry words, cancelled jobs are
-  struck through and today's column says "(today)".
+- `secrets.token_hex` makes the token: the `secrets` module is for values that
+  must be hard to guess, unlike `random`.
+- `secrets.compare_digest` compares the tokens safely.
+- `app.before_request` and `app.after_request` run code around every request
+  without changing each page.
 
 <!-- links -->

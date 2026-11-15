@@ -5,6 +5,7 @@
   <p>Make the help desk easier to read. Your choices are saved with your account.</p>
 
   <form method="post" action="{{ url_for('settings.accessibility') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {# A fieldset and legend group the radio buttons under one question. #}
     <fieldset>
       <legend>Text size</legend>

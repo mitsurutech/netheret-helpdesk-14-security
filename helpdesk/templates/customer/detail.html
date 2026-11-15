@@ -36,6 +36,7 @@
   <p>This request is closed. If the problem comes back, please <a href="{{ url_for('tickets.new_request') }}">raise a new request</a>.</p>
   {% else %}
   <form method="post" action="{{ url_for('customer.add_comment', ticket_id=ticket.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="field">
       <label for="body">Add a comment</label>
       <span class="hint" id="body-hint">Answer a question from the help desk, or tell us what has changed.{% if ticket.status == "resolved" %} Commenting reopens the request.{% endif %}</span>

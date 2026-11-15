@@ -49,6 +49,7 @@
       </nav>
       {% if g.user %}
       <form class="signout" method="post" action="{{ url_for('auth.signout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <span>{{ g.user.name }}</span>
         <button type="submit" class="secondary">Sign out</button>
       </form>
@@ -72,6 +73,7 @@
 
   <footer class="site-footer">
     <div class="wrap">
+      <p><a href="{{ url_for('main.privacy') }}">Privacy notice</a></p>
       <p>Netheret IT Support Solutions is a made-up company used for teaching.</p>
     </div>
   </footer>

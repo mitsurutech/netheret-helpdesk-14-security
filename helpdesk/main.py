@@ -18,6 +18,15 @@ ROLE_NAMES = {
 
 
 # Friendly pages for errors, in plain words, with a way back.
+@bp.app_errorhandler(400)
+def bad_request(error):
+    return render_template(
+        "errors/error.html", heading="That did not work",
+        message="The form was out of date or did not come from this site. "
+                "Go back, reload the page and try again.",
+    ), 400
+
+
 @bp.app_errorhandler(403)
 def forbidden(error):
     return render_template(
@@ -39,6 +48,11 @@ def home():
     if g.user:
         return redirect(url_for("main.dashboard"))
     return render_template("home.html")
+
+
+@bp.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
 
 
 @bp.route("/dashboard")

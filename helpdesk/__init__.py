@@ -29,7 +29,17 @@ def create_app():
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
+    # The session cookie: JavaScript cannot read it (HttpOnly, Flask's
+    # default) and other sites' forms do not get it (SameSite=Lax). On a real
+    # server with HTTPS, set SESSION_COOKIE_SECURE=1 so it is only sent over
+    # HTTPS.
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE") == "1"
+
     db.init_app(app)
+
+    from . import security
+    security.init_app(app)
 
     from . import filters
     filters.register(app)

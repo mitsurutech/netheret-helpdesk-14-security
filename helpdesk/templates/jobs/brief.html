@@ -28,6 +28,7 @@
   {% if job.can_be_updated_by(g.user) %}
   <h2>Progress</h2>
   <form method="post" action="{{ url_for('jobs.progress', job_id=job.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="field">
       <label for="status">Status</label>
       <select id="status" name="status">

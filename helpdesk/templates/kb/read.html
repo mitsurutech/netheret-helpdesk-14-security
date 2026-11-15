@@ -20,6 +20,7 @@
     <p>You said this article helped. Thank you.</p>
     {% else %}
     <form method="post" action="{{ url_for('kb.helpful', article_id=article.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit">Yes, this helped</button>
     </form>
     {% endif %}

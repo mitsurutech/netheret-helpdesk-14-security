@@ -6,6 +6,7 @@
   {{ error_summary(errors) }}
 
   <form method="post" action="{{ url_for('jobs.new_job') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="field">
       <label for="company_id">Company</label>
       {{ field_error(errors, "company_id") }}

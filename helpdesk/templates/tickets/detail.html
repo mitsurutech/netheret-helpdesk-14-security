@@ -66,6 +66,7 @@
       <h3 id="assign-heading">Assign</h3>
       {% if can_assign %}
       <form method="post" action="{{ url_for('tickets.assign', ticket_id=ticket.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="field">
           <label for="assigned_to_id">Assign to</label>
           <select id="assigned_to_id" name="assigned_to_id">
@@ -78,6 +79,7 @@
       </form>
       {% elif ticket.assigned_to_id != g.user.id %}
       <form method="post" action="{{ url_for('tickets.assign', ticket_id=ticket.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="assigned_to_id" value="{{ g.user.id }}">
         <button type="submit">Take this request</button>
       </form>
@@ -90,6 +92,7 @@
       <h3 id="escalate-heading">Escalate</h3>
       {% if higher_tiers %}
       <form method="post" action="{{ url_for('tickets.escalate', ticket_id=ticket.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="field">
           <label for="tier">Escalate to</label>
           <select id="tier" name="tier">
@@ -122,6 +125,7 @@
   <section aria-labelledby="update-heading">
     <h3 id="update-heading">Add an update</h3>
     <form method="post" action="{{ url_for('tickets.add_staff_update', ticket_id=ticket.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="field">
         <label for="body">Update</label>
         <textarea id="body" name="body" required></textarea>
